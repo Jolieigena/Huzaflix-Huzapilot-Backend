@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/playwright:v1.49.1-noble
+WORKDIR /runner
+RUN npm install playwright@1.49.1
+COPY scripts/browser-test.mjs scripts/swagger-test.mjs ./
+CMD ["node","browser-test.mjs"]

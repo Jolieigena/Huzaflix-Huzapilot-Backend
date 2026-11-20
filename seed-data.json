@@ -1,0 +1,64 @@
+{
+  "records": [
+    {
+      "service": "projects",
+      "model": "project",
+      "data": {
+        "name": "projects / project \u2014 sample",
+        "serviceName": "projects",
+        "modelName": "project"
+      },
+      "note": "One sample for an empty collection."
+    },
+    {
+      "service": "projects",
+      "model": "template",
+      "data": {
+        "name": "projects / template \u2014 sample",
+        "serviceName": "projects",
+        "modelName": "template"
+      },
+      "note": "One sample for an empty collection."
+    },
+    {
+      "service": "builds",
+      "model": "build",
+      "data": {
+        "name": "builds / build \u2014 sample",
+        "serviceName": "builds",
+        "modelName": "build"
+      },
+      "note": "One sample for an empty collection."
+    },
+    {
+      "service": "builds",
+      "model": "deployment",
+      "data": {
+        "name": "builds / deployment \u2014 sample",
+        "serviceName": "builds",
+        "modelName": "deployment"
+      },
+      "note": "One sample for an empty collection."
+    },
+    {
+      "service": "workspaces",
+      "model": "workspace",
+      "data": {
+        "name": "workspaces / workspace \u2014 sample",
+        "serviceName": "workspaces",
+        "modelName": "workspace"
+      },
+      "note": "One sample for an empty collection."
+    },
+    {
+      "service": "workspaces",
+      "model": "member",
+      "data": {
+        "name": "workspaces / member \u2014 sample",
+        "serviceName": "workspaces",
+        "modelName": "member"
+      },
+      "note": "One sample for an empty collection."
+    }
+  ]
+}

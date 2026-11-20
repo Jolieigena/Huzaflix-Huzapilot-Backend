@@ -1,0 +1,519 @@
+{
+  "project": "huzaflix",
+  "generation": {
+    "seed": true,
+    "modelMetadata": true,
+    "templates": false
+  },
+  "messaging": {
+    "mode": "none",
+    "brokers": []
+  },
+  "cache": {
+    "mode": "none",
+    "enabled": false,
+    "strategy": "model-version",
+    "defaultTtlSeconds": 30,
+    "maxTtlSeconds": 300,
+    "authorizationCached": false
+  },
+  "monitoring": {
+    "enabled": false,
+    "stackId": "2dbc0aa836a9cba75cf473cb"
+  },
+  "gateway": {
+    "name": "api-gateway",
+    "lang": "nestjs"
+  },
+  "services": [
+    {
+      "name": "projects",
+      "lang": "nestjs",
+      "modules": [
+        "project",
+        "template"
+      ],
+      "instances": 1,
+      "database": "postgres",
+      "routes": [
+        {
+          "module": "project",
+          "list": "/api/projects/project/",
+          "detail": "/api/projects/project/{id}",
+          "table": "hp_project",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "serviceName": {
+                "type": "string",
+                "default": "projects",
+                "example": "projects",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              },
+              "modelName": {
+                "type": "string",
+                "default": "project",
+                "example": "project",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "x-huza-placeholder": true
+          }
+        },
+        {
+          "module": "template",
+          "list": "/api/projects/template/",
+          "detail": "/api/projects/template/{id}",
+          "table": "hp_template",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "serviceName": {
+                "type": "string",
+                "default": "projects",
+                "example": "projects",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              },
+              "modelName": {
+                "type": "string",
+                "default": "template",
+                "example": "template",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "x-huza-placeholder": true
+          }
+        }
+      ],
+      "containers": [
+        "projects-1"
+      ],
+      "databaseContainer": "projects-db",
+      "databaseName": "projects_db"
+    },
+    {
+      "name": "builds",
+      "lang": "go",
+      "modules": [
+        "build",
+        "deployment"
+      ],
+      "instances": 1,
+      "database": "postgres",
+      "routes": [
+        {
+          "module": "build",
+          "list": "/api/builds/build/",
+          "detail": "/api/builds/build/{id}",
+          "table": "hp_build",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "serviceName": {
+                "type": "string",
+                "default": "builds",
+                "example": "builds",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              },
+              "modelName": {
+                "type": "string",
+                "default": "build",
+                "example": "build",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "x-huza-placeholder": true
+          }
+        },
+        {
+          "module": "deployment",
+          "list": "/api/builds/deployment/",
+          "detail": "/api/builds/deployment/{id}",
+          "table": "hp_deployment",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "serviceName": {
+                "type": "string",
+                "default": "builds",
+                "example": "builds",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              },
+              "modelName": {
+                "type": "string",
+                "default": "deployment",
+                "example": "deployment",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "x-huza-placeholder": true
+          }
+        }
+      ],
+      "containers": [
+        "builds-1"
+      ],
+      "databaseContainer": "builds-db",
+      "databaseName": "builds_db"
+    },
+    {
+      "name": "workspaces",
+      "lang": "fastapi",
+      "modules": [
+        "workspace",
+        "member"
+      ],
+      "instances": 1,
+      "database": "postgres",
+      "routes": [
+        {
+          "module": "workspace",
+          "list": "/api/workspaces/workspace/",
+          "detail": "/api/workspaces/workspace/{id}",
+          "table": "hp_workspace",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "serviceName": {
+                "type": "string",
+                "default": "workspaces",
+                "example": "workspaces",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              },
+              "modelName": {
+                "type": "string",
+                "default": "workspace",
+                "example": "workspace",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "x-huza-placeholder": true
+          }
+        },
+        {
+          "module": "member",
+          "list": "/api/workspaces/member/",
+          "detail": "/api/workspaces/member/{id}",
+          "table": "hp_member",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "serviceName": {
+                "type": "string",
+                "default": "workspaces",
+                "example": "workspaces",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              },
+              "modelName": {
+                "type": "string",
+                "default": "member",
+                "example": "member",
+                "description": "Editable initial-generation metadata; remove when no longer needed."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "x-huza-placeholder": true
+          }
+        }
+      ],
+      "containers": [
+        "workspaces-1"
+      ],
+      "databaseContainer": "workspaces-db",
+      "databaseName": "workspaces_db"
+    }
+  ],
+  "authentication": {
+    "apiKeys": {
+      "header": "X-API-Key",
+      "managementPath": "/auth/api-keys",
+      "scopesPath": "/auth/scopes",
+      "scopes": [
+        "builds:build:create",
+        "builds:build:delete",
+        "builds:build:read",
+        "builds:build:update",
+        "builds:deployment:create",
+        "builds:deployment:delete",
+        "builds:deployment:read",
+        "builds:deployment:update",
+        "projects:project:create",
+        "projects:project:delete",
+        "projects:project:read",
+        "projects:project:update",
+        "projects:template:create",
+        "projects:template:delete",
+        "projects:template:read",
+        "projects:template:update",
+        "workspaces:member:create",
+        "workspaces:member:delete",
+        "workspaces:member:read",
+        "workspaces:member:update",
+        "workspaces:workspace:create",
+        "workspaces:workspace:delete",
+        "workspaces:workspace:read",
+        "workspaces:workspace:update"
+      ],
+      "registry": "gateway-sqlite",
+      "cacheSeconds": 0
+    },
+    "identity": {
+      "service": "identity",
+      "runtime": "python",
+      "database": "sqlite",
+      "issuer": "huzaflix",
+      "audience": "huza-api",
+      "cacheSeconds": 0,
+      "accessTokenSeconds": 900,
+      "sessionSeconds": 604800,
+      "managementPaths": [
+        "/auth/roles",
+        "/auth/accounts"
+      ],
+      "roleClaim": "role_id",
+      "refreshRotation": true
+    }
+  },
+  "frontend": {
+    "name": "frontend",
+    "path": "client-portal",
+    "framework": "react",
+    "pageCount": 28,
+    "pages": [
+      {
+        "path": "/",
+        "view": "home"
+      },
+      {
+        "path": "/login",
+        "view": "login"
+      },
+      {
+        "path": "/integrations",
+        "view": "api-keys",
+        "file": "src/pages/ApiKeys.tsx"
+      },
+      {
+        "path": "/access",
+        "view": "access",
+        "file": "src/pages/Access.tsx"
+      },
+      {
+        "path": "/projects/project",
+        "service": "projects",
+        "module": "project",
+        "view": "list",
+        "file": "src/pages/projects/project/list.tsx"
+      },
+      {
+        "path": "/projects/project/:id",
+        "service": "projects",
+        "module": "project",
+        "view": "detail",
+        "file": "src/pages/projects/project/detail.tsx"
+      },
+      {
+        "path": "/projects/project/new",
+        "service": "projects",
+        "module": "project",
+        "view": "create",
+        "file": "src/pages/projects/project/create.tsx"
+      },
+      {
+        "path": "/projects/project/:id/edit",
+        "service": "projects",
+        "module": "project",
+        "view": "edit",
+        "file": "src/pages/projects/project/edit.tsx"
+      },
+      {
+        "path": "/projects/template",
+        "service": "projects",
+        "module": "template",
+        "view": "list",
+        "file": "src/pages/projects/template/list.tsx"
+      },
+      {
+        "path": "/projects/template/:id",
+        "service": "projects",
+        "module": "template",
+        "view": "detail",
+        "file": "src/pages/projects/template/detail.tsx"
+      },
+      {
+        "path": "/projects/template/new",
+        "service": "projects",
+        "module": "template",
+        "view": "create",
+        "file": "src/pages/projects/template/create.tsx"
+      },
+      {
+        "path": "/projects/template/:id/edit",
+        "service": "projects",
+        "module": "template",
+        "view": "edit",
+        "file": "src/pages/projects/template/edit.tsx"
+      },
+      {
+        "path": "/builds/build",
+        "service": "builds",
+        "module": "build",
+        "view": "list",
+        "file": "src/pages/builds/build/list.tsx"
+      },
+      {
+        "path": "/builds/build/:id",
+        "service": "builds",
+        "module": "build",
+        "view": "detail",
+        "file": "src/pages/builds/build/detail.tsx"
+      },
+      {
+        "path": "/builds/build/new",
+        "service": "builds",
+        "module": "build",
+        "view": "create",
+        "file": "src/pages/builds/build/create.tsx"
+      },
+      {
+        "path": "/builds/build/:id/edit",
+        "service": "builds",
+        "module": "build",
+        "view": "edit",
+        "file": "src/pages/builds/build/edit.tsx"
+      },
+      {
+        "path": "/builds/deployment",
+        "service": "builds",
+        "module": "deployment",
+        "view": "list",
+        "file": "src/pages/builds/deployment/list.tsx"
+      },
+      {
+        "path": "/builds/deployment/:id",
+        "service": "builds",
+        "module": "deployment",
+        "view": "detail",
+        "file": "src/pages/builds/deployment/detail.tsx"
+      },
+      {
+        "path": "/builds/deployment/new",
+        "service": "builds",
+        "module": "deployment",
+        "view": "create",
+        "file": "src/pages/builds/deployment/create.tsx"
+      },
+      {
+        "path": "/builds/deployment/:id/edit",
+        "service": "builds",
+        "module": "deployment",
+        "view": "edit",
+        "file": "src/pages/builds/deployment/edit.tsx"
+      },
+      {
+        "path": "/workspaces/workspace",
+        "service": "workspaces",
+        "module": "workspace",
+        "view": "list",
+        "file": "src/pages/workspaces/workspace/list.tsx"
+      },
+      {
+        "path": "/workspaces/workspace/:id",
+        "service": "workspaces",
+        "module": "workspace",
+        "view": "detail",
+        "file": "src/pages/workspaces/workspace/detail.tsx"
+      },
+      {
+        "path": "/workspaces/workspace/new",
+        "service": "workspaces",
+        "module": "workspace",
+        "view": "create",
+        "file": "src/pages/workspaces/workspace/create.tsx"
+      },
+      {
+        "path": "/workspaces/workspace/:id/edit",
+        "service": "workspaces",
+        "module": "workspace",
+        "view": "edit",
+        "file": "src/pages/workspaces/workspace/edit.tsx"
+      },
+      {
+        "path": "/workspaces/member",
+        "service": "workspaces",
+        "module": "member",
+        "view": "list",
+        "file": "src/pages/workspaces/member/list.tsx"
+      },
+      {
+        "path": "/workspaces/member/:id",
+        "service": "workspaces",
+        "module": "member",
+        "view": "detail",
+        "file": "src/pages/workspaces/member/detail.tsx"
+      },
+      {
+        "path": "/workspaces/member/new",
+        "service": "workspaces",
+        "module": "member",
+        "view": "create",
+        "file": "src/pages/workspaces/member/create.tsx"
+      },
+      {
+        "path": "/workspaces/member/:id/edit",
+        "service": "workspaces",
+        "module": "member",
+        "view": "edit",
+        "file": "src/pages/workspaces/member/edit.tsx"
+      }
+    ],
+    "gatewayBaseUrl": "same-origin",
+    "themeEntry": "src/styles/index.css",
+    "componentLibrary": {
+      "enabled": false
+    }
+  },
+  "seeding": {
+    "enabled": true,
+    "inputs": "seed-data.json",
+    "command": "bash seed-data.sh",
+    "trigger": "build.sh after Compose readiness",
+    "policy": "one-per-empty-model",
+    "placeholderModels": 6
+  }
+}

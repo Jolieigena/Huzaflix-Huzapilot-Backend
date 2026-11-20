@@ -1,0 +1,3837 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Gateway",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/auth/scopes": {
+      "get": {
+        "operationId": "listAvailableScopes",
+        "tags": [
+          "Integration keys"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Administrator access required"
+          },
+          "503": {
+            "description": "Key registry unavailable"
+          }
+        }
+      }
+    },
+    "/auth/api-keys": {
+      "get": {
+        "operationId": "listApiKeys",
+        "tags": [
+          "Integration keys"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HuzaApiKey"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Administrator access required"
+          },
+          "503": {
+            "description": "Key registry unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createApiKey",
+        "tags": [
+          "Integration keys"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaCreatedApiKey"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Administrator access required"
+          },
+          "503": {
+            "description": "Key registry unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaApiKeyInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/api-keys/{id}": {
+      "put": {
+        "operationId": "replaceApiKeyPermissions",
+        "tags": [
+          "Integration keys"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaApiKey"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Administrator access required"
+          },
+          "503": {
+            "description": "Key registry unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaApiKeyInput"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "revokeApiKey",
+        "tags": [
+          "Integration keys"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaApiKey"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Administrator access required"
+          },
+          "503": {
+            "description": "Key registry unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaLogin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "refreshSession",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaRefresh"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "logged_out": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "logged_out"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaRefresh"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "currentAccount",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaMe"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        }
+      }
+    },
+    "/auth/roles": {
+      "get": {
+        "operationId": "listRoles",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HuzaRole"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createRole",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaRole"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaRoleInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/roles/{id}": {
+      "put": {
+        "operationId": "updateRole",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaRole"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaRoleInput"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRole",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "deleted"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/auth/accounts": {
+      "get": {
+        "operationId": "listAccounts",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HuzaAccount"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createAccount",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaAccount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaAccountInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/accounts/{id}": {
+      "put": {
+        "operationId": "updateAccount",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaAccount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HuzaAccountUpdate"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "disableAccount",
+        "tags": [
+          "Accounts and roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaAccount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid or revoked session"
+          },
+          "403": {
+            "description": "Insufficient current permissions"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict or protected administrator"
+          },
+          "429": {
+            "description": "Login rate limit"
+          },
+          "503": {
+            "description": "Identity authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/projects/project/": {
+      "get": {
+        "operationId": "projects__project_get",
+        "tags": [
+          "project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:project:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/projects__project"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "projects__project_post",
+        "tags": [
+          "project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:project:create",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projects__project"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/projects__projectInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/project/{id}": {
+      "get": {
+        "operationId": "projects__project_get_detail",
+        "tags": [
+          "project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:project:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projects__project"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "projects__project_put_detail",
+        "tags": [
+          "project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:project:update",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projects__project"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/projects__projectInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "projects__project_delete_detail",
+        "tags": [
+          "project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:project:delete",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/projects/project/_query": {
+      "post": {
+        "operationId": "projects__project_query",
+        "tags": [
+          "project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:project:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/projects/project/_aggregate": {
+      "post": {
+        "operationId": "projects__project_aggregate",
+        "tags": [
+          "project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:project:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pipeline": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "pipeline"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/projects/template/": {
+      "get": {
+        "operationId": "projects__template_get",
+        "tags": [
+          "template"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:template:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/projects__template"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "projects__template_post",
+        "tags": [
+          "template"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:template:create",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projects__template"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/projects__templateInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/template/{id}": {
+      "get": {
+        "operationId": "projects__template_get_detail",
+        "tags": [
+          "template"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:template:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projects__template"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "projects__template_put_detail",
+        "tags": [
+          "template"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:template:update",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/projects__template"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/projects__templateInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "projects__template_delete_detail",
+        "tags": [
+          "template"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:template:delete",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/projects/template/_query": {
+      "post": {
+        "operationId": "projects__template_query",
+        "tags": [
+          "template"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:template:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/projects/template/_aggregate": {
+      "post": {
+        "operationId": "projects__template_aggregate",
+        "tags": [
+          "template"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "projects:template:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pipeline": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "pipeline"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/builds/build/": {
+      "get": {
+        "operationId": "builds__build_get",
+        "tags": [
+          "build"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:build:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/builds__build"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "builds__build_post",
+        "tags": [
+          "build"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:build:create",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/builds__build"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/builds__buildInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/builds/build/{id}": {
+      "get": {
+        "operationId": "builds__build_get_detail",
+        "tags": [
+          "build"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:build:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/builds__build"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "builds__build_put_detail",
+        "tags": [
+          "build"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:build:update",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/builds__build"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/builds__buildInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "builds__build_delete_detail",
+        "tags": [
+          "build"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:build:delete",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/builds/build/_query": {
+      "post": {
+        "operationId": "builds__build_query",
+        "tags": [
+          "build"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:build:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/builds/build/_aggregate": {
+      "post": {
+        "operationId": "builds__build_aggregate",
+        "tags": [
+          "build"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:build:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pipeline": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "pipeline"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/builds/deployment/": {
+      "get": {
+        "operationId": "builds__deployment_get",
+        "tags": [
+          "deployment"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:deployment:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/builds__deployment"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "builds__deployment_post",
+        "tags": [
+          "deployment"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:deployment:create",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/builds__deployment"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/builds__deploymentInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/builds/deployment/{id}": {
+      "get": {
+        "operationId": "builds__deployment_get_detail",
+        "tags": [
+          "deployment"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:deployment:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/builds__deployment"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "builds__deployment_put_detail",
+        "tags": [
+          "deployment"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:deployment:update",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/builds__deployment"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/builds__deploymentInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "builds__deployment_delete_detail",
+        "tags": [
+          "deployment"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:deployment:delete",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/builds/deployment/_query": {
+      "post": {
+        "operationId": "builds__deployment_query",
+        "tags": [
+          "deployment"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:deployment:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/builds/deployment/_aggregate": {
+      "post": {
+        "operationId": "builds__deployment_aggregate",
+        "tags": [
+          "deployment"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "builds:deployment:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pipeline": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "pipeline"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/workspaces/workspace/": {
+      "get": {
+        "operationId": "workspaces__workspace_get",
+        "tags": [
+          "workspace"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:workspace:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/workspaces__workspace"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "workspaces__workspace_post",
+        "tags": [
+          "workspace"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:workspace:create",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/workspaces__workspace"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/workspaces__workspaceInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workspaces/workspace/{id}": {
+      "get": {
+        "operationId": "workspaces__workspace_get_detail",
+        "tags": [
+          "workspace"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:workspace:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/workspaces__workspace"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "workspaces__workspace_put_detail",
+        "tags": [
+          "workspace"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:workspace:update",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/workspaces__workspace"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/workspaces__workspaceInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "workspaces__workspace_delete_detail",
+        "tags": [
+          "workspace"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:workspace:delete",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/workspaces/workspace/_query": {
+      "post": {
+        "operationId": "workspaces__workspace_query",
+        "tags": [
+          "workspace"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:workspace:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/workspaces/workspace/_aggregate": {
+      "post": {
+        "operationId": "workspaces__workspace_aggregate",
+        "tags": [
+          "workspace"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:workspace:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pipeline": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "pipeline"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/workspaces/member/": {
+      "get": {
+        "operationId": "workspaces__member_get",
+        "tags": [
+          "member"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:member:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/workspaces__member"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "workspaces__member_post",
+        "tags": [
+          "member"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:member:create",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/workspaces__member"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/workspaces__memberInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workspaces/member/{id}": {
+      "get": {
+        "operationId": "workspaces__member_get_detail",
+        "tags": [
+          "member"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:member:read",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/workspaces__member"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "workspaces__member_put_detail",
+        "tags": [
+          "member"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:member:update",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/workspaces__member"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/workspaces__memberInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "workspaces__member_delete_detail",
+        "tags": [
+          "member"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:member:delete",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient scope"
+          },
+          "503": {
+            "description": "Key authority unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/workspaces/member/_query": {
+      "post": {
+        "operationId": "workspaces__member_query",
+        "tags": [
+          "member"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:member:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    },
+    "/api/workspaces/member/_aggregate": {
+      "post": {
+        "operationId": "workspaces__member_aggregate",
+        "tags": [
+          "member"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "x-required-scope": "workspaces:member:read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pipeline": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "pipeline"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported query"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "403": {
+            "description": "Insufficient read scope"
+          },
+          "413": {
+            "description": "Query resource limit exceeded"
+          },
+          "503": {
+            "description": "Authorization authority unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HuzaApiKeyInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exact entries returned by GET /auth/scopes; empty denies all access"
+          },
+          "expiresAt": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "description": "Expiry as Unix seconds; null means no expiry"
+          }
+        },
+        "required": [
+          "name",
+          "scopes"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaApiKey": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exact entries returned by GET /auth/scopes; empty denies all access"
+          },
+          "expiresAt": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "description": "Expiry as Unix seconds; null means no expiry"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "revoked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "scopes",
+          "expiresAt",
+          "id",
+          "createdAt",
+          "revoked"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaCreatedApiKey": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exact entries returned by GET /auth/scopes; empty denies all access"
+          },
+          "expiresAt": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "description": "Expiry as Unix seconds; null means no expiry"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "revoked": {
+            "type": "boolean"
+          },
+          "key": {
+            "type": "string",
+            "description": "Secret returned once on creation. Store securely."
+          }
+        },
+        "required": [
+          "name",
+          "scopes",
+          "expiresAt",
+          "id",
+          "createdAt",
+          "revoked",
+          "key"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaRoleInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "scopes"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaRole": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "system": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "scopes",
+          "id",
+          "system"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "role_id": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "role_id",
+          "enabled"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaAccountInput": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 128
+          },
+          "password": {
+            "type": "string",
+            "minLength": 15,
+            "maxLength": 128,
+            "writeOnly": true
+          },
+          "role_id": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "role_id"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaAccountUpdate": {
+        "type": "object",
+        "properties": {
+          "role_id": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 15,
+            "maxLength": 128,
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "role_id"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaSession": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string",
+            "description": "Returned only to non-browser clients. Browser clients receive an HttpOnly refresh cookie."
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaMe": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "$ref": "#/components/schemas/HuzaAccount"
+          },
+          "role": {
+            "$ref": "#/components/schemas/HuzaRole"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "admin": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "account",
+          "role",
+          "scopes",
+          "admin"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaLogin": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "browser": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "HuzaRefresh": {
+        "type": "object",
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "browser": {
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "projects__projectInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "projects",
+            "example": "projects",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "project",
+            "example": "project",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "x-huza-placeholder": true
+      },
+      "projects__project": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "projects",
+            "example": "projects",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "project",
+            "example": "project",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ],
+        "x-huza-placeholder": true
+      },
+      "projects__templateInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "projects",
+            "example": "projects",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "template",
+            "example": "template",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "x-huza-placeholder": true
+      },
+      "projects__template": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "projects",
+            "example": "projects",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "template",
+            "example": "template",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ],
+        "x-huza-placeholder": true
+      },
+      "builds__buildInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "builds",
+            "example": "builds",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "build",
+            "example": "build",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "x-huza-placeholder": true
+      },
+      "builds__build": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "builds",
+            "example": "builds",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "build",
+            "example": "build",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ],
+        "x-huza-placeholder": true
+      },
+      "builds__deploymentInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "builds",
+            "example": "builds",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "deployment",
+            "example": "deployment",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "x-huza-placeholder": true
+      },
+      "builds__deployment": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "builds",
+            "example": "builds",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "deployment",
+            "example": "deployment",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ],
+        "x-huza-placeholder": true
+      },
+      "workspaces__workspaceInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "workspaces",
+            "example": "workspaces",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "workspace",
+            "example": "workspace",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "x-huza-placeholder": true
+      },
+      "workspaces__workspace": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "workspaces",
+            "example": "workspaces",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "workspace",
+            "example": "workspace",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ],
+        "x-huza-placeholder": true
+      },
+      "workspaces__memberInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "workspaces",
+            "example": "workspaces",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "member",
+            "example": "member",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "x-huza-placeholder": true
+      },
+      "workspaces__member": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string",
+            "default": "workspaces",
+            "example": "workspaces",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "modelName": {
+            "type": "string",
+            "default": "member",
+            "example": "member",
+            "description": "Editable initial-generation metadata; remove when no longer needed."
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ],
+        "x-huza-placeholder": true
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Integration keys"
+    },
+    {
+      "name": "Accounts and roles"
+    },
+    {
+      "name": "projects"
+    },
+    {
+      "name": "builds"
+    },
+    {
+      "name": "workspaces"
+    }
+  ]
+}

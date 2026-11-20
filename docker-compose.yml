@@ -1,0 +1,444 @@
+{
+  "services": {
+    "identity": {
+      "build": {
+        "context": "./identity"
+      },
+      "environment": {
+        "IDENTITY_URL": "http://identity:8000",
+        "API_KEY_AUTH_SECRET": "${API_KEY_AUTH_SECRET:?Set API_KEY_AUTH_SECRET}",
+        "JWT_SECRET": "${JWT_SECRET:?Set JWT_SECRET in .env}",
+        "JWT_ISSUER": "huzaflix",
+        "AUTH_USERNAME": "${AUTH_USERNAME:?Set AUTH_USERNAME}",
+        "AUTH_PASSWORD": "${AUTH_PASSWORD:?Set AUTH_PASSWORD}",
+        "BROWSER_ORIGINS": "${BROWSER_ORIGINS:-http://localhost:${FRONTEND_PORT:-5173},http://127.0.0.1:${FRONTEND_PORT:-5173}}",
+        "AUTH_COOKIE_SECURE": "${AUTH_COOKIE_SECURE:-false}",
+        "MONITORING_ENABLED": "false",
+        "PASSWORD_RESET": "${PASSWORD_RESET:-admin}",
+        "PASSWORD_RESET_URL": "${PASSWORD_RESET_URL:-http://localhost:${FRONTEND_PORT:-5173}/reset-password}",
+        "AUTH_EMAIL": "${AUTH_EMAIL:-}",
+        "SMTP_HOST": "${SMTP_HOST:-}",
+        "SMTP_PORT": "${SMTP_PORT:-587}",
+        "SMTP_SECURITY": "${SMTP_SECURITY:-}",
+        "SMTP_USER": "${SMTP_USER:-}",
+        "SMTP_PASSWORD": "${SMTP_PASSWORD:-}",
+        "SMTP_FROM": "${SMTP_FROM:-}",
+        "SMTP_FROM_NAME": "${SMTP_FROM_NAME:-}"
+      },
+      "volumes": [
+        "identity-registry:/data"
+      ],
+      "restart": "unless-stopped",
+      "read_only": true,
+      "tmpfs": [
+        "/tmp"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "cap_drop": [
+        "ALL"
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"
+        ],
+        "interval": "5s",
+        "timeout": "5s",
+        "retries": 24
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "identity"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "projects-db": {
+      "restart": "unless-stopped",
+      "volumes": [
+        "projects-data:/var/lib/postgresql/data"
+      ],
+      "healthcheck": {
+        "interval": "10s",
+        "timeout": "10s",
+        "retries": 30,
+        "start_period": "20s",
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""
+        ]
+      },
+      "image": "postgres:16-alpine",
+      "environment": {
+        "POSTGRES_DB": "projects_db",
+        "POSTGRES_USER": "${PROJECTS_DB_USER:-huza}",
+        "POSTGRES_PASSWORD": "${PROJECTS_DB_PASSWORD:-${DB_PASSWORD:?Set DB_PASSWORD}}"
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "projects-db"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "projects-1": {
+      "build": {
+        "context": "./services/projects"
+      },
+      "environment": {
+        "IDENTITY_URL": "http://identity:8000",
+        "API_KEY_AUTH_SECRET": "${API_KEY_AUTH_SECRET:?Set API_KEY_AUTH_SECRET}",
+        "SERVICE_NAME": "projects",
+        "AUTHORITY_URL": "http://api-gateway:8080",
+        "PORT": "8000",
+        "DB_TYPE": "postgres",
+        "DB_NAME": "projects_db",
+        "DB_HOST": "projects-db",
+        "DB_USER": "${PROJECTS_DB_USER:-huza}",
+        "DB_PASSWORD": "${PROJECTS_DB_PASSWORD:-${DB_PASSWORD:?Set DB_PASSWORD}}",
+        "DB_PORT": "5432",
+        "MONITORING_ENABLED": "false"
+      },
+      "ports": [
+        "127.0.0.1::8000"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-fsS",
+          "http://localhost:8000/health"
+        ],
+        "interval": "5s",
+        "timeout": "10s",
+        "retries": 36,
+        "start_period": "60s"
+      },
+      "depends_on": {
+        "identity": {
+          "condition": "service_healthy"
+        },
+        "projects-db": {
+          "condition": "service_healthy"
+        }
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "projects"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "builds-db": {
+      "restart": "unless-stopped",
+      "volumes": [
+        "builds-data:/var/lib/postgresql/data"
+      ],
+      "healthcheck": {
+        "interval": "10s",
+        "timeout": "10s",
+        "retries": 30,
+        "start_period": "20s",
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""
+        ]
+      },
+      "image": "postgres:16-alpine",
+      "environment": {
+        "POSTGRES_DB": "builds_db",
+        "POSTGRES_USER": "${BUILDS_DB_USER:-huza}",
+        "POSTGRES_PASSWORD": "${BUILDS_DB_PASSWORD:-${DB_PASSWORD:?Set DB_PASSWORD}}"
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "builds-db"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "builds-1": {
+      "build": {
+        "context": "./services/builds"
+      },
+      "environment": {
+        "IDENTITY_URL": "http://identity:8000",
+        "API_KEY_AUTH_SECRET": "${API_KEY_AUTH_SECRET:?Set API_KEY_AUTH_SECRET}",
+        "SERVICE_NAME": "builds",
+        "AUTHORITY_URL": "http://api-gateway:8080",
+        "PORT": "8000",
+        "DB_TYPE": "postgres",
+        "DB_NAME": "builds_db",
+        "DB_HOST": "builds-db",
+        "DB_USER": "${BUILDS_DB_USER:-huza}",
+        "DB_PASSWORD": "${BUILDS_DB_PASSWORD:-${DB_PASSWORD:?Set DB_PASSWORD}}",
+        "DB_PORT": "5432",
+        "MONITORING_ENABLED": "false"
+      },
+      "ports": [
+        "127.0.0.1::8000"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-fsS",
+          "http://localhost:8000/health"
+        ],
+        "interval": "5s",
+        "timeout": "10s",
+        "retries": 36,
+        "start_period": "60s"
+      },
+      "depends_on": {
+        "identity": {
+          "condition": "service_healthy"
+        },
+        "builds-db": {
+          "condition": "service_healthy"
+        }
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "builds"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "workspaces-db": {
+      "restart": "unless-stopped",
+      "volumes": [
+        "workspaces-data:/var/lib/postgresql/data"
+      ],
+      "healthcheck": {
+        "interval": "10s",
+        "timeout": "10s",
+        "retries": 30,
+        "start_period": "20s",
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""
+        ]
+      },
+      "image": "postgres:16-alpine",
+      "environment": {
+        "POSTGRES_DB": "workspaces_db",
+        "POSTGRES_USER": "${WORKSPACES_DB_USER:-huza}",
+        "POSTGRES_PASSWORD": "${WORKSPACES_DB_PASSWORD:-${DB_PASSWORD:?Set DB_PASSWORD}}"
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "workspaces-db"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "workspaces-1": {
+      "build": {
+        "context": "./services/workspaces"
+      },
+      "environment": {
+        "IDENTITY_URL": "http://identity:8000",
+        "API_KEY_AUTH_SECRET": "${API_KEY_AUTH_SECRET:?Set API_KEY_AUTH_SECRET}",
+        "SERVICE_NAME": "workspaces",
+        "AUTHORITY_URL": "http://api-gateway:8080",
+        "PORT": "8000",
+        "DB_TYPE": "postgres",
+        "DB_NAME": "workspaces_db",
+        "DB_HOST": "workspaces-db",
+        "DB_USER": "${WORKSPACES_DB_USER:-huza}",
+        "DB_PASSWORD": "${WORKSPACES_DB_PASSWORD:-${DB_PASSWORD:?Set DB_PASSWORD}}",
+        "DB_PORT": "5432",
+        "MONITORING_ENABLED": "false"
+      },
+      "ports": [
+        "127.0.0.1::8000"
+      ],
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-fsS",
+          "http://localhost:8000/health"
+        ],
+        "interval": "5s",
+        "timeout": "10s",
+        "retries": 36,
+        "start_period": "60s"
+      },
+      "depends_on": {
+        "identity": {
+          "condition": "service_healthy"
+        },
+        "workspaces-db": {
+          "condition": "service_healthy"
+        }
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "workspaces"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "api-gateway": {
+      "volumes": [
+        "gateway-auth-data:/data"
+      ],
+      "build": {
+        "context": "./api-gateway"
+      },
+      "environment": {
+        "CACHE_VARY_HEADERS": "${CACHE_VARY_HEADERS:-}",
+        "IDENTITY_URL": "http://identity:8000",
+        "API_KEY_AUTH_SECRET": "${API_KEY_AUTH_SECRET:?Set API_KEY_AUTH_SECRET}",
+        "DB_TYPE": "sqlite",
+        "PORT": "8080",
+        "SERVICE_NAME": "api-gateway",
+        "PROJECTS_MICROSERVICE_URL": "http://projects-1:8000",
+        "PROJECTS_MICROSERVICE_URLS": "http://projects-1:8000",
+        "BUILDS_MICROSERVICE_URL": "http://builds-1:8000",
+        "BUILDS_MICROSERVICE_URLS": "http://builds-1:8000",
+        "WORKSPACES_MICROSERVICE_URL": "http://workspaces-1:8000",
+        "WORKSPACES_MICROSERVICE_URLS": "http://workspaces-1:8000",
+        "MONITORING_ENABLED": "false"
+      },
+      "ports": [
+        "127.0.0.1:${GATEWAY_PORT:-8080}:8080"
+      ],
+      "depends_on": {
+        "identity": {
+          "condition": "service_healthy"
+        },
+        "projects-1": {
+          "condition": "service_healthy"
+        },
+        "builds-1": {
+          "condition": "service_healthy"
+        },
+        "workspaces-1": {
+          "condition": "service_healthy"
+        }
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-fsS",
+          "http://localhost:8080/health"
+        ],
+        "interval": "5s",
+        "timeout": "10s",
+        "retries": 36,
+        "start_period": "60s"
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "api-gateway"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    "frontend": {
+      "build": {
+        "context": "./client-portal"
+      },
+      "ports": [
+        "127.0.0.1:${FRONTEND_PORT:-5173}:80"
+      ],
+      "depends_on": {
+        "api-gateway": {
+          "condition": "service_healthy"
+        }
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "wget",
+          "-qO-",
+          "http://127.0.0.1/"
+        ],
+        "interval": "5s",
+        "timeout": "10s",
+        "retries": 12
+      },
+      "labels": {
+        "io.huzapilot.project": "huzaflix",
+        "io.huzapilot.stack": "2dbc0aa836a9cba75cf473cb",
+        "io.huzapilot.service": "frontend"
+      },
+      "environment": {
+        "MONITORING_ENABLED": "false"
+      },
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    }
+  },
+  "volumes": {
+    "identity-registry": {},
+    "projects-data": {},
+    "builds-data": {},
+    "workspaces-data": {},
+    "gateway-auth-data": {}
+  }
+}

@@ -1,0 +1,8 @@
+package security
+import("bytes";"encoding/json";"io";"net/http";"os";"time";"github.com/gin-gonic/gin")
+func IdentityAuthorize(c *gin.Context,token,scope string)(int,bool){
+ raw,_:=json.Marshal(Doc{"token":token,"scope":scope});req,err:=http.NewRequestWithContext(c.Request.Context(),"POST",os.Getenv("IDENTITY_URL")+"/authorize",bytes.NewReader(raw));if err!=nil{return 503,false};req.Header.Set("Content-Type","application/json");req.Header.Set("X-Huza-Internal-Token",os.Getenv("API_KEY_AUTH_SECRET"));resp,err:=(&http.Client{Timeout:5*time.Second}).Do(req);if err!=nil{return 503,false};defer resp.Body.Close();if resp.StatusCode!=200{if resp.StatusCode==401||resp.StatusCode==403{return resp.StatusCode,false};return 503,false};var result struct{Admin bool};if json.NewDecoder(resp.Body).Decode(&result)!=nil{return 503,false};return 200,result.Admin
+}
+func IdentityForward(c *gin.Context){
+ req,err:=http.NewRequestWithContext(c.Request.Context(),c.Request.Method,os.Getenv("IDENTITY_URL")+c.Request.URL.Path,c.Request.Body);if err!=nil{c.AbortWithStatus(503);return};for _,h:=range []string{"Authorization","Content-Type","Cookie","Origin","X-API-Key"}{if v:=c.GetHeader(h);v!=""{req.Header.Set(h,v)}};req.Header.Set("X-Huza-Internal-Token",os.Getenv("API_KEY_AUTH_SECRET"));req.Header.Set("X-Huza-Peer",c.RemoteIP());resp,err:=(&http.Client{Timeout:10*time.Second}).Do(req);if err!=nil{c.AbortWithStatus(503);return};defer resp.Body.Close();for _,h:=range []string{"Content-Type","Set-Cookie","Cache-Control","Pragma"}{if v:=resp.Header.Get(h);v!=""{c.Header(h,v)}};c.Status(resp.StatusCode);_,_=io.Copy(c.Writer,resp.Body)
+}

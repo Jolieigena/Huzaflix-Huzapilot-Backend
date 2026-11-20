@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+monitoring/secrets/
+node_modules/
+dist/
+__pycache__/
+*.pyc
+smoke-results.json
+browser-seeds.json
+seed-results.json
+.seed-data.lock

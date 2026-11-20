@@ -1,0 +1,1281 @@
+{
+  "name": "api-gateway",
+  "role": "gateway",
+  "modules": [],
+  "services": [
+    "projects",
+    "builds",
+    "workspaces"
+  ],
+  "database": "postgres",
+  "spec": {},
+  "modelMetadata": true,
+  "scopes": [
+    "builds:build:create",
+    "builds:build:delete",
+    "builds:build:read",
+    "builds:build:update",
+    "builds:deployment:create",
+    "builds:deployment:delete",
+    "builds:deployment:read",
+    "builds:deployment:update",
+    "projects:project:create",
+    "projects:project:delete",
+    "projects:project:read",
+    "projects:project:update",
+    "projects:template:create",
+    "projects:template:delete",
+    "projects:template:read",
+    "projects:template:update",
+    "workspaces:member:create",
+    "workspaces:member:delete",
+    "workspaces:member:read",
+    "workspaces:member:update",
+    "workspaces:workspace:create",
+    "workspaces:workspace:delete",
+    "workspaces:workspace:read",
+    "workspaces:workspace:update"
+  ],
+  "authSpec": {
+    "openapi": "3.0.3",
+    "info": {
+      "title": "API Gateway",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/auth/scopes": {
+        "get": {
+          "operationId": "listAvailableScopes",
+          "tags": [
+            "Integration keys"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Administrator access required"
+            },
+            "503": {
+              "description": "Key registry unavailable"
+            }
+          }
+        }
+      },
+      "/auth/api-keys": {
+        "get": {
+          "operationId": "listApiKeys",
+          "tags": [
+            "Integration keys"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/HuzaApiKey"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Administrator access required"
+            },
+            "503": {
+              "description": "Key registry unavailable"
+            }
+          }
+        },
+        "post": {
+          "operationId": "createApiKey",
+          "tags": [
+            "Integration keys"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaCreatedApiKey"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Administrator access required"
+            },
+            "503": {
+              "description": "Key registry unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaApiKeyInput"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/api-keys/{id}": {
+        "put": {
+          "operationId": "replaceApiKeyPermissions",
+          "tags": [
+            "Integration keys"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaApiKey"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Administrator access required"
+            },
+            "503": {
+              "description": "Key registry unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaApiKeyInput"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "delete": {
+          "operationId": "revokeApiKey",
+          "tags": [
+            "Integration keys"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaApiKey"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Administrator access required"
+            },
+            "503": {
+              "description": "Key registry unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "operationId": "login",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaSession"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaLogin"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/refresh": {
+        "post": {
+          "operationId": "refreshSession",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaSession"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaRefresh"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/logout": {
+        "post": {
+          "operationId": "logout",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "logged_out": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "logged_out"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaRefresh"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/me": {
+        "get": {
+          "operationId": "currentAccount",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaMe"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          }
+        }
+      },
+      "/auth/roles": {
+        "get": {
+          "operationId": "listRoles",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/HuzaRole"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          }
+        },
+        "post": {
+          "operationId": "createRole",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaRole"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaRoleInput"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/roles/{id}": {
+        "put": {
+          "operationId": "updateRole",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaRole"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaRoleInput"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "delete": {
+          "operationId": "deleteRole",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "deleted": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "deleted"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "/auth/accounts": {
+        "get": {
+          "operationId": "listAccounts",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/HuzaAccount"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          }
+        },
+        "post": {
+          "operationId": "createAccount",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaAccount"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaAccountInput"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/accounts/{id}": {
+        "put": {
+          "operationId": "updateAccount",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaAccount"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HuzaAccountUpdate"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "delete": {
+          "operationId": "disableAccount",
+          "tags": [
+            "Accounts and roles"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HuzaAccount"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid or revoked session"
+            },
+            "403": {
+              "description": "Insufficient current permissions"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "409": {
+              "description": "Conflict or protected administrator"
+            },
+            "429": {
+              "description": "Login rate limit"
+            },
+            "503": {
+              "description": "Identity authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "HuzaApiKeyInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Exact entries returned by GET /auth/scopes; empty denies all access"
+            },
+            "expiresAt": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true,
+              "description": "Expiry as Unix seconds; null means no expiry"
+            }
+          },
+          "required": [
+            "name",
+            "scopes"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaApiKey": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Exact entries returned by GET /auth/scopes; empty denies all access"
+            },
+            "expiresAt": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true,
+              "description": "Expiry as Unix seconds; null means no expiry"
+            },
+            "id": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "revoked": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "name",
+            "scopes",
+            "expiresAt",
+            "id",
+            "createdAt",
+            "revoked"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaCreatedApiKey": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Exact entries returned by GET /auth/scopes; empty denies all access"
+            },
+            "expiresAt": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true,
+              "description": "Expiry as Unix seconds; null means no expiry"
+            },
+            "id": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "revoked": {
+              "type": "boolean"
+            },
+            "key": {
+              "type": "string",
+              "description": "Secret returned once on creation. Store securely."
+            }
+          },
+          "required": [
+            "name",
+            "scopes",
+            "expiresAt",
+            "id",
+            "createdAt",
+            "revoked",
+            "key"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaRoleInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "name",
+            "scopes"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaRole": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "system": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "name",
+            "scopes",
+            "id",
+            "system"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaAccount": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "role_id": {
+              "type": "string"
+            },
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "username",
+            "role_id",
+            "enabled"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaAccountInput": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 128
+            },
+            "password": {
+              "type": "string",
+              "minLength": 15,
+              "maxLength": 128,
+              "writeOnly": true
+            },
+            "role_id": {
+              "type": "string"
+            },
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "username",
+            "password",
+            "role_id"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaAccountUpdate": {
+          "type": "object",
+          "properties": {
+            "role_id": {
+              "type": "string"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "password": {
+              "type": "string",
+              "minLength": 15,
+              "maxLength": 128,
+              "writeOnly": true
+            }
+          },
+          "required": [
+            "role_id"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaSession": {
+          "type": "object",
+          "properties": {
+            "access_token": {
+              "type": "string"
+            },
+            "refresh_token": {
+              "type": "string",
+              "description": "Returned only to non-browser clients. Browser clients receive an HttpOnly refresh cookie."
+            }
+          },
+          "required": [
+            "access_token"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaMe": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "$ref": "#/components/schemas/HuzaAccount"
+            },
+            "role": {
+              "$ref": "#/components/schemas/HuzaRole"
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "admin": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "account",
+            "role",
+            "scopes",
+            "admin"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaLogin": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string",
+              "writeOnly": true
+            },
+            "browser": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "username",
+            "password"
+          ],
+          "additionalProperties": false
+        },
+        "HuzaRefresh": {
+          "type": "object",
+          "properties": {
+            "refresh_token": {
+              "type": "string",
+              "writeOnly": true
+            },
+            "browser": {
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        },
+        "apiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "X-API-Key"
+        }
+      }
+    },
+    "tags": [
+      {
+        "name": "Integration keys"
+      },
+      {
+        "name": "Accounts and roles"
+      }
+    ]
+  }
+}

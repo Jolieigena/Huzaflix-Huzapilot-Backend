@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "sharedDirectory": "app/shared",
+  "queryExecution": "native scalar planning with bounded residual evaluation",
+  "filterOperators": [
+    "$eq",
+    "$ne",
+    "$gt",
+    "$gte",
+    "$lt",
+    "$lte",
+    "$in",
+    "$nin",
+    "$exists",
+    "$not",
+    "$all",
+    "$size",
+    "$elemMatch",
+    "$contains",
+    "$startsWith",
+    "$expr",
+    "$and",
+    "$or",
+    "$nor"
+  ],
+  "aggregationStages": [
+    "$match",
+    "$sort",
+    "$skip",
+    "$limit",
+    "$project",
+    "$set",
+    "$addFields",
+    "$unset",
+    "$group",
+    "$count",
+    "$unwind"
+  ],
+  "accumulators": [
+    "$sum",
+    "$avg",
+    "$min",
+    "$max",
+    "$first",
+    "$last",
+    "$push",
+    "$addToSet"
+  ],
+  "updateOperators": [
+    "$set",
+    "$unset",
+    "$inc",
+    "$push",
+    "$addToSet",
+    "$pull"
+  ],
+  "defaults": {
+    "maxRows": 1000,
+    "maxBytes": 8388608,
+    "maxStages": 32,
+    "maxNesting": 32
+  },
+  "bulkAtomicity": false,
+  "singleRecordWrites": "compare-and-swap, bounded retries",
+  "upsert": "explicit id only",
+  "nativeDriverAccess": true,
+  "declaredIndexes": "x-huza-indexes (Cassandra: id only)",
+  "relations": "x-huza-relations, server-only populate with explicit read policy",
+  "planning": "explain reports native, native-prefilter, primary-key or bounded-scan; no optimizer/index-use guarantee",
+  "responseCache": {
+    "backend": "redis",
+    "scope": "service/model",
+    "key": "credential, route, query and configured vary headers",
+    "invalidation": "successful shared-store writes",
+    "defaultTtlSeconds": 30,
+    "authorizationCached": false,
+    "consistency": "bounded stale on missed invalidation; not transactional"
+  },
+  "messaging": {
+    "brokers": [
+      "kafka",
+      "rabbitmq"
+    ],
+    "delivery": "at-least-once",
+    "automaticCrudEvents": false
+  },
+  "unsupportedPortableFeatures": [
+    "$lookup",
+    "$graphLookup",
+    "$facet",
+    "$regex",
+    "$where",
+    "positional array writes",
+    "natural-key upsert",
+    "cross-database transactions",
+    "undeclared automatic indexes"
+  ]
+}

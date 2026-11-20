@@ -1,0 +1,5 @@
+import './DataTable.css';
+export type Row=Record<string,unknown> & {id:string};
+export default function DataTable({rows,fields,onView,onEdit,onDelete}:{rows:Row[];fields:string[];onView:(r:Row)=>void;onEdit:(r:Row)=>void;onDelete:(r:Row)=>void}){
+ return <table className="data-table"><thead className="data-table-head"><tr className="data-table-row">{fields.map(f=><th className="data-table-heading" key={f}>{f}</th>)}<th className="data-table-heading">Actions</th></tr></thead><tbody className="data-table-body">{rows.map(row=><tr className="data-table-row" key={row.id}>{fields.map(f=><td className="data-table-cell" key={f}>{typeof row[f]==='object'?JSON.stringify(row[f]):String(row[f]??'')}</td>)}<td className="data-table-actions"><button className="data-table-view" onClick={()=>onView(row)}>View</button><button className="data-table-edit" onClick={()=>onEdit(row)}>Edit</button><button className="data-table-delete" onClick={()=>onDelete(row)}>Delete</button></td></tr>)}</tbody></table>;
+}

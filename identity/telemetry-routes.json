@@ -1,0 +1,21 @@
+[
+  "/actuator/prometheus",
+  "/api/docs",
+  "/api/docs.json",
+  "/auth/accounts",
+  "/auth/api-keys",
+  "/auth/login",
+  "/auth/logout",
+  "/auth/me",
+  "/auth/refresh",
+  "/auth/roles",
+  "/auth/scopes",
+  "/authorize",
+  "/health",
+  "/internal/api-keys/authorize",
+  "/metrics",
+  "/openapi.json",
+  "/auth/accounts/{id}",
+  "/auth/api-keys/{id}",
+  "/auth/roles/{id}"
+]

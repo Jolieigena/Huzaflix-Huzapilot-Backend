@@ -1,0 +1,5 @@
+import {FormEvent,useState} from 'react';
+import {Navigate,useNavigate} from 'react-router-dom';
+import {login,session} from '../api/session';
+import './Login.css';
+export default function Login(){const [error,setError]=useState(''),[busy,setBusy]=useState(false);const navigate=useNavigate();if(session())return <Navigate to="/" replace/>;async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);setBusy(true);try{await login(String(data.get('username')),String(data.get('password')));navigate('/');}catch(e){setError((e as Error).message);}finally{setBusy(false);}}return <main className="login"><h1 className="login-title">Sign in</h1><form className="login-form" onSubmit={submit}><label className="login-label">Username<input className="login-input" name="username" autoComplete="username" required/></label><label className="login-label">Password<input className="login-input" name="password" type="password" autoComplete="current-password" required/></label>{error&&<p className="login-error" role="alert">{error}</p>}<button className="login-submit" disabled={busy}>Sign in</button></form></main>;}

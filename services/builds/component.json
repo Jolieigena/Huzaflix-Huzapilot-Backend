@@ -1,0 +1,897 @@
+{
+  "name": "builds",
+  "role": "service",
+  "modules": [
+    "build",
+    "deployment"
+  ],
+  "services": [],
+  "database": "postgres",
+  "spec": {
+    "openapi": "3.0.3",
+    "info": {
+      "title": "builds",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/build/": {
+        "get": {
+          "operationId": "build_get",
+          "tags": [
+            "build"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:build:read",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/build"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          }
+        },
+        "post": {
+          "operationId": "build_post",
+          "tags": [
+            "build"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:build:create",
+          "responses": {
+            "201": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/build"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildInput"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/build/{id}": {
+        "get": {
+          "operationId": "build_get_detail",
+          "tags": [
+            "build"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:build:read",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/build"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "put": {
+          "operationId": "build_put_detail",
+          "tags": [
+            "build"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:build:update",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/build"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildInput"
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "operationId": "build_delete_detail",
+          "tags": [
+            "build"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:build:delete",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "/build/_query": {
+        "post": {
+          "operationId": "build_query",
+          "tags": [
+            "build"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:build:read",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "filter": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "options": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Query results",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid or unsupported query"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient read scope"
+            },
+            "413": {
+              "description": "Query resource limit exceeded"
+            },
+            "503": {
+              "description": "Authorization authority unavailable"
+            }
+          }
+        }
+      },
+      "/build/_aggregate": {
+        "post": {
+          "operationId": "build_aggregate",
+          "tags": [
+            "build"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:build:read",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pipeline": {
+                      "type": "array",
+                      "maxItems": 32,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "pipeline"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Query results",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid or unsupported query"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient read scope"
+            },
+            "413": {
+              "description": "Query resource limit exceeded"
+            },
+            "503": {
+              "description": "Authorization authority unavailable"
+            }
+          }
+        }
+      },
+      "/deployment/": {
+        "get": {
+          "operationId": "deployment_get",
+          "tags": [
+            "deployment"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:deployment:read",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/deployment"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          }
+        },
+        "post": {
+          "operationId": "deployment_post",
+          "tags": [
+            "deployment"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:deployment:create",
+          "responses": {
+            "201": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/deployment"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deploymentInput"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/deployment/{id}": {
+        "get": {
+          "operationId": "deployment_get_detail",
+          "tags": [
+            "deployment"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:deployment:read",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/deployment"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "put": {
+          "operationId": "deployment_put_detail",
+          "tags": [
+            "deployment"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:deployment:update",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/deployment"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deploymentInput"
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "operationId": "deployment_delete_detail",
+          "tags": [
+            "deployment"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:deployment:delete",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient scope"
+            },
+            "503": {
+              "description": "Key authority unavailable"
+            }
+          },
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "/deployment/_query": {
+        "post": {
+          "operationId": "deployment_query",
+          "tags": [
+            "deployment"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:deployment:read",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "filter": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "options": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Query results",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid or unsupported query"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient read scope"
+            },
+            "413": {
+              "description": "Query resource limit exceeded"
+            },
+            "503": {
+              "description": "Authorization authority unavailable"
+            }
+          }
+        }
+      },
+      "/deployment/_aggregate": {
+        "post": {
+          "operationId": "deployment_aggregate",
+          "tags": [
+            "deployment"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            },
+            {
+              "apiKeyAuth": []
+            }
+          ],
+          "x-required-scope": "builds:deployment:read",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pipeline": {
+                      "type": "array",
+                      "maxItems": 32,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "pipeline"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Query results",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid or unsupported query"
+            },
+            "401": {
+              "description": "Invalid credentials"
+            },
+            "403": {
+              "description": "Insufficient read scope"
+            },
+            "413": {
+              "description": "Query resource limit exceeded"
+            },
+            "503": {
+              "description": "Authorization authority unavailable"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "buildInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "serviceName": {
+              "type": "string",
+              "default": "builds",
+              "example": "builds",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            },
+            "modelName": {
+              "type": "string",
+              "default": "build",
+              "example": "build",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "x-huza-placeholder": true
+        },
+        "build": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "serviceName": {
+              "type": "string",
+              "default": "builds",
+              "example": "builds",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            },
+            "modelName": {
+              "type": "string",
+              "default": "build",
+              "example": "build",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            }
+          },
+          "required": [
+            "name",
+            "id"
+          ],
+          "x-huza-placeholder": true
+        },
+        "deploymentInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "serviceName": {
+              "type": "string",
+              "default": "builds",
+              "example": "builds",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            },
+            "modelName": {
+              "type": "string",
+              "default": "deployment",
+              "example": "deployment",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "x-huza-placeholder": true
+        },
+        "deployment": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "serviceName": {
+              "type": "string",
+              "default": "builds",
+              "example": "builds",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            },
+            "modelName": {
+              "type": "string",
+              "default": "deployment",
+              "example": "deployment",
+              "description": "Editable initial-generation metadata; remove when no longer needed."
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            }
+          },
+          "required": [
+            "name",
+            "id"
+          ],
+          "x-huza-placeholder": true
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        },
+        "apiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "X-API-Key"
+        }
+      }
+    }
+  },
+  "modelMetadata": true
+}
