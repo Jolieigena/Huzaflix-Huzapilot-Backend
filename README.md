@@ -69,7 +69,7 @@ Secrets such as `SMTP_PASSWORD` belong only in `.env` on the server, never in gi
 ## Regenerate or change it
 
 To add or change services, regenerate with HuzaPilot (the password reset support is on the
-`feature/huzaflix` branch until it is merged):
+`feature/password-reset` branch until it is merged):
 
 ```bash
 bash huza-multi-generate-project.sh ../Huzaflix-Huzapilot-Backend huzaflix nestjs \
