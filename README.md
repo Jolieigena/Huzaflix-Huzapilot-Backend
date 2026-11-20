@@ -81,3 +81,25 @@ bash huza-multi-generate-project.sh ../Huzaflix-Huzapilot-Backend huzaflix nestj
 
 Generating into an existing folder overwrites generated files, so commit your own edits first and review the
 diff afterwards.
+
+## Troubleshooting
+
+**`all predefined address pools have been fully subnetted`** when starting. The Docker host has run out of its
+default network addresses, which happens on servers that run many Compose projects. Give this project its own
+small network with a `docker-compose.override.yml` next to `docker-compose.yml`, using a free range (check with
+`docker network ls` and `ip route` first):
+
+```yaml
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.254.87.160/27   # replace with a free range on your host
+```
+
+Keep this file on the server; it depends on that host, so do not commit it.
+
+**`set: pipefail: invalid option name`** when running `build.sh` on Linux. The scripts have Windows line
+endings (CRLF), usually because the files were copied from a Windows checkout. Clone the repo on the server, or
+export it with `git -c core.autocrlf=false archive HEAD`, so the scripts keep Unix line endings.
+
